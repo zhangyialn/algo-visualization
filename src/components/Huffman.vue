@@ -17,8 +17,6 @@ import { onMounted, ref } from 'vue';
 import * as echarts from 'echarts';
 import { ElMessage } from 'element-plus';
 import { ElMessageBox } from 'element-plus';
-import type { da } from 'element-plus/es/locale/index.mjs';
-import { changeGlobalNodesTarget } from 'element-plus/lib/utils/index.js';
 
 const customData = ref('');
 const isAddNode = ref(true);
