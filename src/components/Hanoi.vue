@@ -27,6 +27,15 @@ watchEffect(() => {
     ]
 })
 
+const resetTowers = () => {
+    towers.value = [
+        Array.from({ length: diskCount.value }, (_, i) => diskCount.value - i),
+        [],
+        []
+    ]
+}
+
+
 const diskHeight = 20
 
 const moveDisk = async (from, to) => {
@@ -46,15 +55,16 @@ const hanoi = async(n, from, to, aux) => {
 }
 
 const solveHanoi = async () => {
-  hanoi(towers.value[0].length, 0, 2, 1)
+    hanoi(towers.value[0].length, 0, 2, 1)
+    resetTowers()
 }
 
 const getDiskStyle = (disk) => {
-    const colors = ['#FF5733', '#FFBD33', '#DBFF33', '#75FF33', '#33FF57']
+    const hue = disk * 137.508
     return {
         height: diskHeight + 'px',
         width: disk * 40 + 'px',
-        backgroundColor: colors[disk - 1],
+        backgroundColor: `hsl(${hue}, 100%, 50%)`,
         color: '#fff',
     }
 }
