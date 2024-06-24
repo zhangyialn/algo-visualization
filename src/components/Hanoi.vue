@@ -47,15 +47,16 @@ const moveDisk = async (from, to) => {
 }
 
 const hanoi = async(n, from, to, aux) => {
-  if (n > 0) {
-    await hanoi(n - 1, from, aux, to)
-    await moveDisk(from, to)
-    await hanoi(n - 1, aux, to, from)
-  }
+    if (n > 0) {
+        await hanoi(n - 1, from, aux, to)
+        await moveDisk(from, to)
+        await hanoi(n - 1, aux, to, from)
+    } 
+        
 }
 
 const solveHanoi = async () => {
-    hanoi(towers.value[0].length, 0, 2, 1)
+    await hanoi(towers.value[0].length, 0, 2, 1)
     resetTowers()
 }
 
