@@ -2,26 +2,68 @@
     <div id="page">
         <Nav />
         <div id="algo">
-            <div id="echart" ref="chartContainer" style="width: 1600px; height: 600px;"></div>
-            <input  v-model="customData"type="text" placeholder="请输入你想要进行的片数">
-            <button @click="">开始汉诺塔</button>
+            <div class="towers">
+                <div v-for="(tower, index) in towers" :key="index" class="tower">
+                    <div class="disk" v-for="disk in tower" :key="disk" :style="getDiskStyle(disk)"></div>
+                </div>
+            </div>
+            <input type="number" v-model.number="diskCount" placeholder="输入圆盘数量" />
+            <button @click="solveHanoi()">Solve</button>
         </div>
     </div>
 </template>
 
-<script setup lang="ts">
-import Nav from './Nav.vue';
-import { ref, onMounted } from 'vue';
-import * as echarts from 'echarts';
+<script setup>
+import Nav from './Nav.vue'
+import { ref,watchEffect } from 'vue'
 
-const customData = ref('');
-const chartContainer = ref<HTMLElement | null>(null);
-let myChart: echarts.ECharts | null = null;
+const diskCount = ref(3)
+const towers = ref([])
 
+watchEffect(() => {
+    towers.value = [Array.from({ length: diskCount.value }, (_, i) => diskCount.value - i),
+        [],
+        []
+    ]
+})
 
+const diskHeight = 20
 
+const moveDisk = async (from, to) => {
+    const disk = towers.value[from].pop()
+    towers.value[to].push(disk)
+    // 强制组件重新渲染
+    towers.value = towers.value.slice()
+    await new Promise(resolve => setTimeout(resolve, 1200))  // 等待两秒
+}
+
+const hanoi = async(n, from, to, aux) => {
+  if (n > 0) {
+    await hanoi(n - 1, from, aux, to)
+    await moveDisk(from, to)
+    await hanoi(n - 1, aux, to, from)
+  }
+}
+
+const solveHanoi = async () => {
+  hanoi(towers.value[0].length, 0, 2, 1)
+}
+
+const getDiskStyle = (disk) => {
+    const colors = ['#FF5733', '#FFBD33', '#DBFF33', '#75FF33', '#33FF57']
+    return {
+        height: diskHeight + 'px',
+        width: disk * 40 + 'px',
+        backgroundColor: colors[disk - 1],
+        color: '#fff',
+    }
+}
 
 </script>
+
+
+
+
 
 <style scoped>
 #page {
@@ -49,7 +91,7 @@ input {
     border: 2px solid #54b2bd;
     border-radius: 8px;
     padding-left: 35px;
-    margin-top: 20px;
+    margin-top: 40px;
     width: 278px;
     height: 50px;
     color: #54b2bd;
@@ -63,5 +105,41 @@ button {
     color: #54b2bd;
     font-size: 25px;
     margin-top: 20px;
+}
+
+.towers {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    width: 1400px;
+    height: 300px;
+}
+
+.tower {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    width: 100px;
+    position: relative;
+    z-index: 1;
+}
+
+.disk {
+    margin: 2px 0;
+    background-color: #ccc;
+    text-align: center;
+    border: 1px solid #000;
+    z-index: 2;
+}
+
+.tower::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 10px;
+    height: 300px;
+    background-color: #964B00;
+    left: 50%;
+    transform: translateX(-50%);
 }
 </style>
