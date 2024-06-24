@@ -15,7 +15,8 @@
 
 <script setup>
 import Nav from './Nav.vue'
-import { ref,watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
+import { ElMessage } from 'element-plus'
 
 const diskCount = ref(3)
 const towers = ref([])
@@ -57,6 +58,7 @@ const hanoi = async(n, from, to, aux) => {
 
 const solveHanoi = async () => {
     await hanoi(towers.value[0].length, 0, 2, 1)
+    ElMessage.success('已完成')
     resetTowers()
 }
 
@@ -136,7 +138,7 @@ button {
 }
 
 .disk {
-    margin: 2px 0;
+    margin:  0;
     background-color: #ccc;
     text-align: center;
     border: 1px solid #000;
