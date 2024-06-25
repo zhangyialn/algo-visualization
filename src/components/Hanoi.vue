@@ -7,7 +7,7 @@
                     <div class="disk" v-for="disk in tower" :key="disk" :style="getDiskStyle(disk)"></div>
                 </div>
             </div>
-            <input type="number" v-model.number="diskCount" placeholder="输入圆盘数量" />
+            <input type="number" v-model.number="diskCount" placeholder="输入圆盘数量" min="1" max="13"/>
             <button @click="solveHanoi()">Solve</button>
         </div>
     </div>
@@ -21,12 +21,7 @@ import { ElMessage } from 'element-plus'
 const diskCount = ref(3)
 const towers = ref([])
 
-watchEffect(() => {
-    towers.value = [Array.from({ length: diskCount.value }, (_, i) => diskCount.value - i),
-        [],
-        []
-    ]
-})
+
 
 const resetTowers = () => {
     towers.value = [
@@ -71,6 +66,14 @@ const getDiskStyle = (disk) => {
         color: '#fff',
     }
 }
+
+watchEffect(() => {
+    if (diskCount.value > 1 && diskCount.value < 14) {
+        resetTowers()
+    } else {
+        ElMessage.error('请输入1-13之间的整数')
+    }
+})
 
 </script>
 
@@ -124,7 +127,7 @@ button {
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
-    width: 1400px;
+    width: 1500px;
     height: 300px;
 }
 
