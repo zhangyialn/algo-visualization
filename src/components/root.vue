@@ -7,9 +7,9 @@
             <div @click="router.push('/mst')">Minimum Spanning Tree</div>
             <div @click="router.push('/huffman')">Huffman Tree</div>
             <div @click="router.push('/hanoi')">Hanoi Tower</div>
+            <div @click="router.push('/checkerboardCover')">Cover</div>
         </div>
     </div>
-
 </template>
 
 <script setup lang="ts">

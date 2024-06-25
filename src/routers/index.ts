@@ -1,3 +1,4 @@
+import component from "element-plus/es/components/tree-select/src/tree-select-option.mjs";
 import path from "path";
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -26,6 +27,11 @@ const routes = [
         path: "/hanoi",
         name: "hanoi",
         component: () => import('../components/Hanoi.vue'),
+    },
+    {
+        path: "/checkerboardCover",
+        name: "checkerboardCover",
+        component: () => import('../components/checkerboardCover.vue')
     }
 ]
 
