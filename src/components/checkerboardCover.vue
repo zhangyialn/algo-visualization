@@ -26,15 +26,15 @@
                 </div>
             </div>
             <button @click="coverBoard">覆盖棋盘</button>
-            <input type="number" v-model.number="k" placeholder="输入棋盘大小的k值" />
-            <input type="number" v-model.number="specialRow" placeholder="特殊点的行" />
-            <input type="number" v-model.number="specialCol" placeholder="特殊点的列" />
+            <input type="number" v-model.number="k"placeholder="输入棋盘大小的k值" min="1" max="5"/>
+            <input type="number" v-model.number="specialRow" placeholder="特殊点的行" min="1" />
+            <input type="number" v-model.number="specialCol" placeholder="特殊点的列" min="1"/>
         </div>
     </div>
 </template>
 
 <script setup>
-import { reactive, ref, watch, watchEffect } from 'vue';
+import { reactive, ref, watchEffect } from 'vue';
 import Nav from './Nav.vue'
 import { ElMessage } from 'element-plus';
 
@@ -66,6 +66,8 @@ const shapes = [
 ];
 
 
+
+
 function getCellColor(cell) {
     if (cell === 1) return 'transparent'; // 特殊单元格不着色
     const baseHue = 240; // 可以选择一个基础色调
@@ -73,7 +75,11 @@ function getCellColor(cell) {
 }
 
 const initBoard = () => {
-    if((specialRow.value > 2 ** k.value || specialCol.value > 2 ** k.value) && k.value !== '') {
+    if(k.value === '' || k.value === 0) {
+        ElMessage.error('k值不能为空或为0！');
+        return;
+    }
+    if((specialRow.value > 2 ** k.value || specialCol.value > 2 ** k.value) && k.value !== '' ) {
         ElMessage.error('特殊点的位置不在棋盘范围内！');
         return;
     }
@@ -81,20 +87,24 @@ const initBoard = () => {
         ElMessage.error('k值不能大于6！');
         return;
     }
-    if(specialRow.value !== '' && specialCol.value !== '' && k.value !== '') {
-        board.splice(0); // 清空board数组
-        const size = 2 ** k.value;
-        for (let i = 0; i < size; i++) {
-            board.push(Array(size).fill(0)); // 使用push添加新的行
-        }
-        board[specialRow.value - 1][specialCol.value - 1] = 1;
+    if (specialRow.value === 0 || specialCol.value === 0 || specialRow.value === '' || specialCol.value === '') {
+        ElMessage.error('特殊点的位置不能为空或为0！');
+        return;
     }
+    board.splice(0); // 清空board数组
+    const size = 2 ** k.value;
+    for (let i = 0; i < size; i++) {
+        board.push(Array(size).fill(0)); // 使用push添加新的行
+    }
+    board[specialRow.value - 1][specialCol.value - 1] = 1;
+    
 };
 
 const coverBoard = async () => {
     tileNumber.value = 2; // Reset tile number
     await cover(0, 0, Math.pow(2, k.value), specialRow.value -1 , specialCol.value-1);
     ElMessage.success('覆盖完成!');
+    initBoard();
 };
 
 const cover = async (r, c, size, sr, sc) => {
