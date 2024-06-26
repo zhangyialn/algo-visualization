@@ -1,5 +1,3 @@
-import component from "element-plus/es/components/tree-select/src/tree-select-option.mjs";
-import path from "path";
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
